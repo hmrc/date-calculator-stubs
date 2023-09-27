@@ -1,3 +1,5 @@
 # microservice specific routes
 
-GET        /hello-world             uk.gov.hmrc.datecalculatorstubs.controllers.MicroserviceHelloWorldController.hello
+PUT     /bank-holidays              uk.gov.hmrc.datecalculatorstubs.controllers.GDSController.putBankHolidays
+GET     /bank-holidays              uk.gov.hmrc.datecalculatorstubs.controllers.GDSController.getBankHolidays
+DELETE  /bank-holidays              uk.gov.hmrc.datecalculatorstubs.controllers.GDSController.deleteBankHolidays
