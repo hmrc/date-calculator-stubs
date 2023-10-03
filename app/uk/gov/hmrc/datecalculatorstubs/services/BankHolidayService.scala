@@ -55,7 +55,7 @@ object BankHolidayService {
         |      },
         |      {
         |        "title": "Latest bank holiday",
-        |        "date": "999999999-12-31",
+        |        "date": "9999-12-31",
         |        "notes": "",
         |        "bunting": true
         |      }
@@ -72,7 +72,7 @@ object BankHolidayService {
         |      },
         |      {
         |        "title": "Latest bank holiday",
-        |         "date": "999999999-12-31",
+        |         "date": "9999-12-31",
         |         "notes": "",
         |         "bunting": true
         |      }
@@ -89,7 +89,7 @@ object BankHolidayService {
         |      },
         |      {
         |        "title": "Latest bank holiday",
-        |        "date": "999999999-01-01",
+        |        "date": "9999-01-01",
         |        "notes": "",
         |        "bunting": true
         |      }
