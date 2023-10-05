@@ -35,11 +35,18 @@ class GDSController @Inject() (
   private val logger: Logger = Logger(this.getClass)
 
   val putBankHolidays: Action[PredefinedResponse] = Action.async(parse.json[PredefinedResponse]) { request =>
-    bankHolidayService.insertPredefinedResponse(request.body).map(_ => NoContent)
+    bankHolidayService.insertPredefinedResponse(request.body).map{ _ =>
+      logger.info(s"Inserted predefined bank holidays response with status ${request.body.status.toString} and JSON body " +
+        s"${request.body.body.map(_.toString).getOrElse("(empty body)")}")
+      NoContent
+    }
   }
 
   val deleteBankHolidays: Action[AnyContent] = Action.async{ _ =>
-    bankHolidayService.deletePredefinedResponse().map(_ => NoContent)
+    bankHolidayService.deletePredefinedResponse().map{ _ =>
+      logger.info("Predefined bank holidays response deleted")
+      NoContent
+    }
   }
 
   val getBankHolidays: Action[AnyContent] = Action.async { request =>
@@ -48,8 +55,11 @@ class GDSController @Inject() (
         logger.warn("Could not find a non-empty value in a 'From' header")
         Future.successful(BadRequest("No valid 'From' header in request"))
 
-      case Some(_) =>
+      case Some(from) =>
         bankHolidayService.getPredefinedResponse().map { response =>
+          logger.info(s"Got request to get bank holidays with From header value '$from'. Responding with status " +
+            s"${response.status.toString} and body ${response.body.map(_.toString).getOrElse("(empty body)")}")
+
           response.body.fold[Result](Status(response.status))(body =>
             Status(response.status)(body))
         }
