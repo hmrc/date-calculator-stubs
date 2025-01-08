@@ -27,23 +27,25 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
 class GDSController @Inject() (
-    bankHolidayService: BankHolidayService,
-    cc:                 ControllerComponents
-)(implicit ec: ExecutionContext)
-  extends BackendController(cc) {
+  bankHolidayService: BankHolidayService,
+  cc: ControllerComponents
+)(using ExecutionContext)
+    extends BackendController(cc) {
 
   private val logger: Logger = Logger(this.getClass)
 
   val putBankHolidays: Action[PredefinedResponse] = Action.async(parse.json[PredefinedResponse]) { request =>
-    bankHolidayService.insertPredefinedResponse(request.body).map{ _ =>
-      logger.info(s"Inserted predefined bank holidays response with status ${request.body.status.toString} and JSON body " +
-        s"${request.body.body.map(_.toString).getOrElse("(empty body)")}")
+    bankHolidayService.insertPredefinedResponse(request.body).map { _ =>
+      logger.info(
+        s"Inserted predefined bank holidays response with status ${request.body.status.toString} and JSON body " +
+          s"${request.body.body.map(_.toString).getOrElse("(empty body)")}"
+      )
       NoContent
     }
   }
 
-  val deleteBankHolidays: Action[AnyContent] = Action.async{ _ =>
-    bankHolidayService.deletePredefinedResponse().map{ _ =>
+  val deleteBankHolidays: Action[AnyContent] = Action.async { _ =>
+    bankHolidayService.deletePredefinedResponse().map { _ =>
       logger.info("Predefined bank holidays response deleted")
       NoContent
     }
@@ -57,11 +59,12 @@ class GDSController @Inject() (
 
       case Some(from) =>
         bankHolidayService.getPredefinedResponse().map { response =>
-          logger.info(s"Got request to get bank holidays with From header value '$from'. Responding with status " +
-            s"${response.status.toString} and body ${response.body.map(_.toString).getOrElse("(empty body)")}")
+          logger.info(
+            s"Got request to get bank holidays with From header value '$from'. Responding with status " +
+              s"${response.status.toString} and body ${response.body.map(_.toString).getOrElse("(empty body)")}"
+          )
 
-          response.body.fold[Result](Status(response.status))(body =>
-            Status(response.status)(body))
+          response.body.fold[Result](Status(response.status))(body => Status(response.status)(body))
         }
     }
   }

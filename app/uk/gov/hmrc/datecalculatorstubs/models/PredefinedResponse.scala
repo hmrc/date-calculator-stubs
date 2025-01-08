@@ -18,11 +18,11 @@ package uk.gov.hmrc.datecalculatorstubs.models
 
 import play.api.libs.json.{JsValue, Json, OFormat}
 
-final case class PredefinedResponse(status: Int, body: Option[JsValue])
+final case class PredefinedResponse(status: Int, body: Option[JsValue]) derives CanEqual
 
 object PredefinedResponse {
 
   @SuppressWarnings(Array("org.wartremover.warts.Any"))
-  implicit val format: OFormat[PredefinedResponse] = Json.format
+  given OFormat[PredefinedResponse] = Json.format
 
 }

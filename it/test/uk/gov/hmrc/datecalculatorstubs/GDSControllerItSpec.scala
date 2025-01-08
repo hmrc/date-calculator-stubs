@@ -24,14 +24,10 @@ import play.api.Application
 import play.api.inject.guice.GuiceApplicationBuilder
 import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
+import play.api.libs.ws.writeableOf_String
 
-class GDSControllerItSpec
-  extends AnyWordSpec
-  with Matchers
-  with ScalaFutures
-  with IntegrationPatience
-  with GuiceOneServerPerSuite {
-
+class GDSControllerItSpec extends AnyWordSpec, Matchers, ScalaFutures, IntegrationPatience, GuiceOneServerPerSuite {
+  
   val wsClient = app.injector.instanceOf[WSClient]
   val baseUrl = s"http://localhost:$port"
 
