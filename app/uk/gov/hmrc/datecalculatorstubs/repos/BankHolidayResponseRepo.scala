@@ -18,7 +18,8 @@ package uk.gov.hmrc.datecalculatorstubs.repos
 
 import com.google.inject.{Inject, Singleton}
 import org.mongodb.scala.model.{Filters, ReplaceOptions}
-import play.api.libs.json._
+import org.mongodb.scala.SingleObservableFuture
+import play.api.libs.json.*
 import uk.gov.hmrc.datecalculatorstubs.models.PredefinedResponse
 import uk.gov.hmrc.datecalculatorstubs.repos.BankHolidayResponseRepo.BankHolidayResponseRepoDocument
 import uk.gov.hmrc.mongo.play.json.PlayMongoRepository
@@ -27,14 +28,14 @@ import uk.gov.hmrc.mongo.MongoComponent
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton @SuppressWarnings(Array("org.wartremover.warts.Any"))
-class BankHolidayResponseRepo @Inject() (mongoComponent: MongoComponent)(implicit ec: ExecutionContext)
-  extends PlayMongoRepository[BankHolidayResponseRepoDocument](
-    mongoComponent = mongoComponent,
-    collectionName = "bank-holiday-responses",
-    domainFormat   = BankHolidayResponseRepoDocument.format,
-    indexes        = Seq.empty,
-    replaceIndexes = false
-  ) {
+class BankHolidayResponseRepo @Inject() (mongoComponent: MongoComponent)(using ExecutionContext)
+    extends PlayMongoRepository[BankHolidayResponseRepoDocument](
+      mongoComponent = mongoComponent,
+      collectionName = "bank-holiday-responses",
+      domainFormat = summon[OFormat[BankHolidayResponseRepoDocument]],
+      indexes = Seq.empty,
+      replaceIndexes = false
+    ) {
 
   // keep replacing the same document in mongo whenever we insert by using a static id
   private val staticId = "static-id"
@@ -42,9 +43,9 @@ class BankHolidayResponseRepo @Inject() (mongoComponent: MongoComponent)(implici
   def insert(predefinedResponse: PredefinedResponse): Future[Unit] =
     collection
       .replaceOne(
-        filter      = Filters.eq("_id", staticId),
+        filter = Filters.eq("_id", staticId),
         replacement = BankHolidayResponseRepoDocument(staticId, predefinedResponse),
-        options     = ReplaceOptions().upsert(true)
+        options = ReplaceOptions().upsert(true)
       )
       .toFuture()
       .map(_ => ())
@@ -66,7 +67,7 @@ object BankHolidayResponseRepo {
   object BankHolidayResponseRepoDocument {
 
     @SuppressWarnings(Array("org.wartremover.warts.Any"))
-    implicit val format: OFormat[BankHolidayResponseRepoDocument] = Json.format
+    given OFormat[BankHolidayResponseRepoDocument] = Json.format
 
   }
 

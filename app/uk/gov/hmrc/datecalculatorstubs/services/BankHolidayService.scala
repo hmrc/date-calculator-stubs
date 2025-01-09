@@ -24,7 +24,7 @@ import uk.gov.hmrc.datecalculatorstubs.repos.BankHolidayResponseRepo
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class BankHolidayService @Inject() (bankHolidayResponseRepo: BankHolidayResponseRepo)(implicit ec: ExecutionContext) {
+class BankHolidayService @Inject() (bankHolidayResponseRepo: BankHolidayResponseRepo)(using ExecutionContext) {
 
   def insertPredefinedResponse(predefinedResponse: PredefinedResponse): Future[Unit] =
     bankHolidayResponseRepo.insert(predefinedResponse)
@@ -41,8 +41,9 @@ object BankHolidayService {
 
   private val defaultPredefinedResponse = PredefinedResponse(
     200,
-    Some(Json.parse(
-      """
+    Some(
+      Json.parse(
+        """
         |{
         |  "england-and-wales": {
         |    "division": "england-and-wales",
@@ -97,7 +98,8 @@ object BankHolidayService {
         |  }
         |}
         |""".stripMargin
-    ))
+      )
+    )
   )
 
 }

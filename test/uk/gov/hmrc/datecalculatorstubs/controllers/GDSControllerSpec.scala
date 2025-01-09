@@ -16,14 +16,16 @@
 
 package uk.gov.hmrc.datecalculatorstubs.controllers
 
-import play.api.libs.json.{JsString, Json}
+import play.api.libs.json.{JsString, JsValue, Json}
 import play.api.test.FakeRequest
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import uk.gov.hmrc.datecalculatorstubs.controllers.testsupport.ItSpec
 import uk.gov.hmrc.datecalculatorstubs.models.PredefinedResponse
 import uk.gov.hmrc.datecalculatorstubs.repos.BankHolidayResponseRepo
 
 class GDSControllerSpec extends ItSpec {
+
+  given CanEqual[JsValue, JsValue] = CanEqual.derived
 
   lazy val controller = fakeApplication().injector.instanceOf[GDSController]
 
@@ -66,14 +68,14 @@ class GDSControllerSpec extends ItSpec {
       val result = controller.getBankHolidays(FakeRequest())
 
       status(result) shouldBe BAD_REQUEST
-      contentAsString(result) shouldBe ("No valid 'From' header in request")
+      contentAsString(result) shouldBe "No valid 'From' header in request"
     }
 
     "return a 400 if an empty value is found in the 'From' header in the request" in {
       val result = controller.getBankHolidays(FakeRequest().withHeaders("From" -> ""))
 
       status(result) shouldBe BAD_REQUEST
-      contentAsString(result) shouldBe ("No valid 'From' header in request")
+      contentAsString(result) shouldBe "No valid 'From' header in request"
     }
 
     "return a predefined response if one has been inserted" in {

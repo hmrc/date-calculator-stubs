@@ -26,29 +26,25 @@ import play.core.server.ServerConfig
 import uk.gov.hmrc.http.test.WireMockSupport
 import uk.gov.hmrc.mongo.test.CleanMongoCollectionSupport
 
-trait ItSpec
-  extends AnyFreeSpecLike
-  with Matchers
-  with GuiceOneServerPerSuite
-  with WireMockSupport
-  with CleanMongoCollectionSupport { self =>
+trait ItSpec extends AnyFreeSpecLike, Matchers, GuiceOneServerPerSuite, WireMockSupport, CleanMongoCollectionSupport {
+  self =>
 
   val testServerPort: Int = 19001
 
   def conf: Map[String, Any] = Map(
-    "mongodb.uri" -> mongoUri,
-    "auditing.enabled" -> false,
+    "mongodb.uri"            -> mongoUri,
+    "auditing.enabled"       -> false,
     "auditing.traceRequests" -> false
   )
 
-  //in tests use `app`
-  override def fakeApplication(): Application = new GuiceApplicationBuilder()
+  // in tests use `app`
+  override def fakeApplication(): Application = GuiceApplicationBuilder()
     .configure(conf)
     .build()
 
   object TestServerFactory extends DefaultTestServerFactory {
     override protected def serverConfig(app: Application): ServerConfig = {
-      val sc = ServerConfig(port    = Some(testServerPort), sslPort = Some(0), mode = Mode.Test, rootDir = app.path)
+      val sc = ServerConfig(port = Some(testServerPort), sslPort = Some(0), mode = Mode.Test, rootDir = app.path)
       sc.copy(configuration = sc.configuration.withFallback(overrideServerConfiguration(app)))
     }
   }
