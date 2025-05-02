@@ -27,9 +27,9 @@ class GDSControllerSpec extends ItSpec {
 
   given CanEqual[JsValue, JsValue] = CanEqual.derived
 
-  lazy val controller = fakeApplication().injector.instanceOf[GDSController]
+  lazy val controller = app.injector.instanceOf[GDSController]
 
-  lazy val repo = fakeApplication().injector.instanceOf[BankHolidayResponseRepo]
+  lazy val repo = app.injector.instanceOf[BankHolidayResponseRepo]
 
   "PUT /bank-holidays must" - {
 
