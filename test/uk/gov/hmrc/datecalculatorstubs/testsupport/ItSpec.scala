@@ -20,7 +20,7 @@ import org.scalatest.freespec.AnyFreeSpecLike
 import org.scalatest.matchers.should.Matchers
 import org.scalatestplus.play.guice.GuiceOneServerPerSuite
 import play.api.inject.guice.GuiceApplicationBuilder
-import play.api.test.{DefaultTestServerFactory, RunningServer}
+import play.api.test.{DefaultTestServerFactory, TestServerFactory}
 import play.api.{Application, Mode}
 import play.core.server.ServerConfig
 import uk.gov.hmrc.http.test.WireMockSupport
@@ -42,14 +42,13 @@ trait ItSpec extends AnyFreeSpecLike, Matchers, GuiceOneServerPerSuite, WireMock
     .configure(conf)
     .build()
 
-  object TestServerFactory extends DefaultTestServerFactory {
+  object CustomTestServerFactory extends DefaultTestServerFactory {
     override protected def serverConfig(app: Application): ServerConfig = {
       val sc = ServerConfig(port = Some(testServerPort), sslPort = None, mode = Mode.Test, rootDir = app.path)
       sc.copy(configuration = sc.configuration.withFallback(overrideServerConfiguration(app)))
     }
   }
 
-  override implicit protected lazy val runningServer: RunningServer =
-    TestServerFactory.start(app)
+  override protected def testServerFactory: TestServerFactory = CustomTestServerFactory
 
 }
