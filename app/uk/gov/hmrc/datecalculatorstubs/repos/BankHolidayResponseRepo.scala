@@ -18,7 +18,6 @@ package uk.gov.hmrc.datecalculatorstubs.repos
 
 import com.google.inject.{Inject, Singleton}
 import org.mongodb.scala.model.{Filters, ReplaceOptions}
-import org.mongodb.scala.SingleObservableFuture
 import play.api.libs.json.*
 import uk.gov.hmrc.datecalculatorstubs.models.PredefinedResponse
 import uk.gov.hmrc.datecalculatorstubs.repos.BankHolidayResponseRepo.BankHolidayResponseRepoDocument
